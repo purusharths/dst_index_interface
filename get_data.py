@@ -22,7 +22,7 @@ def get_data(year, month, day=0):
     date = year+month
     cashe = check_if_exists(year, month)
     if cashe:
-        print("Dataa Avilable offline. Skipping Download")
+        print("Data Avilable offline. Skipping Download")
         return 1
     try:
         r = requests.get("http://wdc.kugi.kyoto-u.ac.jp/dst_final/"+date+"/index.html")
@@ -55,12 +55,17 @@ def get_value_from_database(year,month,day=0):
         for reading in readings:
             print(reading[0],": " ,reading[1])
 
-if __name__ == '__main__':
-    year = input("Year: ")
-    month = input("Month: ")
+def main(year, month):
     validity_check = create_csv_data(year, month)
     if not validity_check:
         clean_data.get_readings_array(clean_data.get_dataframe(year+month+".csv"), year, month, put_to_database=True)
         del_csv(year+month+".csv")
     else:
         get_value_from_database(year, month)
+
+
+
+if __name__ == '__main__':
+    year = input("Year: ")
+    month = input("Month: ")
+    main(year, month)
