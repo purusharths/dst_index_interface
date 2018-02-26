@@ -48,17 +48,21 @@ def del_csv(csv_name):
     os.remove(csv_name)
 
 def get_value_from_database(year,month,day=0):
+    c = connect_db.DataBase(database="readings_database.db", table="readings_database")
+    c.create_connection()
     if not day:
-        c = connect_db.DataBase(database="readings_database.db", table="readings_database")
-        c.create_connection()
         readings = c.search('year', 'month', table='readings_data', year=year, month=month, fetch_value='day, readings')
         for reading in readings:
             print(reading[0],": " ,reading[1])
+    else:
+        readings = c.search('year', 'month', 'day', table='readings_data', year=year, month=month, day=day, fetch_value='day, readings')
+        return readings
 
-def main(year, month):
+
+def main(year, month, display=True):
     validity_check = create_csv_data(year, month)
     if not validity_check:
-        clean_data.get_readings_array(clean_data.get_dataframe(year+month+".csv"), year, month, put_to_database=True)
+        clean_data.get_readings_array(clean_data.get_dataframe(year+month+".csv"), year, month, put_to_database=True, display=display)
         del_csv(year+month+".csv")
     else:
         get_value_from_database(year, month)

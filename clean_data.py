@@ -33,7 +33,7 @@ def split_keep_delimeter(negative_list):
     return converted_list
 
 
-def get_readings_array(df, year, month, put_to_database=False):
+def get_readings_array(df, year, month, put_to_database=False, display=True):
     """
     Requres a dataframe object containing the readings.
     Converts the dataframe values to numpy floats 
@@ -47,7 +47,8 @@ def get_readings_array(df, year, month, put_to_database=False):
             final_readings = check_readings(readings)
         if put_to_database:
             put_readings.push_to_db(year, month, day, final_readings)
-        print(day, ": ", list(final_readings))
+        if display:
+            print(day, ": ", list(final_readings))
 
 def get_dataframe(filename):
     df = pd.read_csv(filename)
