@@ -1,72 +1,83 @@
-import sys
+import argparse
+import datetime
 from calendar import monthrange
 import json
 
 import get_data
 import plotting
 
-def display_error(arg=""):
-	if arg:
-		print(arg)
-	print("Command line argument not present or invalid. Try again.")
-	print("Use python main.py <year> <month> <day (optional)> ")
-	print("Eg: python main.py 1997 12 ")
-	print("Further flags include: --table-html, --table-cli, --plot-days, --sublplot")
-
 def get_day(year, month, day, rtr=False):
-	response = get_data.get_value_from_database(year, month, day)
-	if response:
-		print("\n YEAR: {} | MONTH: {} | DAY: {}".format(year, month, day))
-		print(response[0][1])
-		if rtr:
-			return json.loads(response[0][1])
-		else:
-			return 1
-	else:
-		get_data.main(year,month,display=False)
-		get_day(year, month, day)
+        response = get_data.get_value_from_database(year, month, day)
+        if response:
+                if rtr:
+                    return json.loads(response[0][1])
+                print("\n YEAR: {} | MONTH: {} | DAY: {}".format(year, month, day))
+                print(response[0][1])
+                return 1
+        else:
+                get_data.main(year,month,display=False)
+                get_day(year, month, day)
+
+def get_month(year, month): ## need to be optimised and merged with get_day
+    response = get_data.get_value_from_database(year, month, print_result=False)
+    if response:
+        vals = []
+        for val in response:
+            temp = json.loads(val[1])
+            vals.append(sum(temp)/len(temp))
+    return vals
 
 
+def command_line_arguments(year, month, day, plot_day, plot_month):
+    if day!='None':
+        limit = monthrange(int(year), int(month))[1]
+        if int(day) > limit:
+            print("Invalid Date for given month and year. Exiting...\n")
+            exit()
+        val = get_day(year, month, day)
 
+        if plot_day:
+            try:
+                plot_points = get_day(year, month, day, rtr=True); val=False
+                pl = plotting.Plotting(year=year, month=month, day=day)
+                pl.normal_plot(plot_points)
+                return "plotted"
+            except IndexError:
+                pass
 
+    elif day == 'None':
+        if month and year:
+            print("\n YEAR: {} | MONTH: {} | \n".format(year, month))
+            get_data.main(year, month)
 
-def cla():
-	val = True
-	try:
-		year = sys.argv[1]; month = sys.argv[2]
-	except IndexError:
-		display_error();exit()
-	try:
-		if int(year) > 2013 or int(year) < 1950:
-			print("Year beyond the range. Exiting...\n"); display_error(); exit()
-		if int(month) < 1 or int(month) > 12:
-			print("Invlaid Month. Exiting...\n"); display_error(); exit()
-	except ValueError:
-		print("Invalid Numerical Value");exit()
-	try:
-		day = sys.argv[3]
-		if int(day)>31 or int(day) < 1:
-			print("Invalid Dates. Exiting...\n"); display_error(); exit()
-		limit = monthrange(int(year), int(month))[1]
-		if int(day) > limit:
-			print("Invalid Date for given month and year. Exiting...\n");display_error();exit()
-		try:
-			if not sys.argv[4]:
-				val = get_day(year, month, day)
-		except:
-			pass
-	except IndexError:
-		pass
-	try:
-		if sys.argv[4]:
-			plot_points = get_day(year, month, day, rtr=True); val=False
-			pl = plotting.Plotting(year=year, month=month, day=day)
-			pl.normal_plot(plot_points)
-			return "plotted"
-	except IndexError:
-		pass
-	if val:
-		get_data.main(year, month)
+            if plot_month:
+                try:
+                    monthly_average = get_month(year, month)
+                    plot = plotting.Plotting(year=year, month=month)
+                    plot.normal_plot(monthly_average, day=False)
+                except IndexError:
+                    raise("Index Error. Can't Plot Monthy Average Values.")
+    
+
 
 if __name__ == '__main__':
-	cla()
+
+    def str2bool(v):
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+    
+    n = lambda x: ('0'+str(x)) if len(str(x)) == 1 else str(x)
+
+    parser = argparse.ArgumentParser('DST Index Command Line Interface')
+    parser.add_argument('-y', '--year', type=int, choices=range(1957,2014), help="Year Value (Should be between 1950 and 2013)")
+    parser.add_argument('-m', '--month', type=int, choices=range(1,13), help="Month")
+    parser.add_argument('-d', '--day', type=int, choices=range(1,32), help="Day (Optional)")
+    parser.add_argument('--plot-day', type=str2bool, nargs='?', const=True, help="For getting the plot for a Single Day")
+    parser.add_argument('--plot-month', type=str2bool, nargs='?', const=True, help="For getting the plot for an Entire Month")
+    args = vars(parser.parse_args())
+    
+    command_line_arguments(str(args['year']), n(args['month']), n(args['day']), args['plot_day'], args['plot_month'])
