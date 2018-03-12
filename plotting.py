@@ -19,14 +19,18 @@ class Plotting(object):
 			return dt_obj.strftime("%B - %Y")
 
 	def normal_plot(self, value, day=True):
+		plt.style.use('seaborn')
+		plt.plot(value,'o-')
+		plt.ylabel("Values")
 		if not day:
-			pass
+			plt.xticks(range(0,len(value)))
+			plt.xlabel("Days")
+			title = self.get_formatted_date(year=self.year, month=self.month)
+			plt.title(title)
+			plt.show()
 		else:
-			plt.style.use('seaborn')
-			plt.plot(value,'o-')
 			plt.xticks(range(0,24))
 			plt.xlabel("Hours throughout the day")
-			plt.ylabel("Values")
 			title = self.get_formatted_date(year=self.year, month=self.month, day=self.day)
 			plt.title(title)
 			plt.show()

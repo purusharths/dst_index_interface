@@ -18,8 +18,17 @@ def get_day(year, month, day, rtr=False):
                 get_data.main(year,month,display=False)
                 get_day(year, month, day)
 
+def get_month(year, month): ## need to be optimised and merged with get_day
+    response = get_data.get_value_from_database(year, month, print_result=False)
+    if response:
+        vals = []
+        for val in response:
+            temp = json.loads(val[1])
+            vals.append(sum(temp)/len(temp))
+    return vals
 
-def command_line_arguments(year, month, day, plot_day):
+
+def command_line_arguments(year, month, day, plot_day, plot_month):
     if day!='None':
         limit = monthrange(int(year), int(month))[1]
         if int(day) > limit:
@@ -40,6 +49,14 @@ def command_line_arguments(year, month, day, plot_day):
         if month and year:
             print("\n YEAR: {} | MONTH: {} | \n".format(year, month))
             get_data.main(year, month)
+
+            if plot_month:
+                try:
+                    monthly_average = get_month(year, month)
+                    plot = plotting.Plotting(year=year, month=month)
+                    plot.normal_plot(monthly_average, day=False)
+                except IndexError:
+                    raise("Index Error. Can't Plot Monthy Average Values.")
     
 
 
@@ -63,4 +80,4 @@ if __name__ == '__main__':
     parser.add_argument('--plot-month', type=str2bool, nargs='?', const=True, help="For getting the plot for an Entire Month")
     args = vars(parser.parse_args())
     
-    command_line_arguments(str(args['year']), n(args['month']), n(args['day']), args['plot_day'])
+    command_line_arguments(str(args['year']), n(args['month']), n(args['day']), args['plot_day'], args['plot_month'])
