@@ -68,11 +68,20 @@ def cla(year, month, day, plot_day):
             pass
 
 if __name__ == '__main__':
+
+    def str2bool(v):
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     parser = argparse.ArgumentParser('My program')
     parser.add_argument('-y', '--year', type=int, choices=range(1957,2014))
     parser.add_argument('-m', '--month', type=int, choices=range(1,13))
     parser.add_argument('-d', '--day', type=int, choices=range(1,32))
-    parser.add_argument('--plot-day', type=str)
+    parser.add_argument('--plot-day', type=str2bool, nargs='?', const=True)
     args = vars(parser.parse_args())
     n = lambda x: ('0'+str(x)) if len(str(x)) == 1 else str(x)
 
