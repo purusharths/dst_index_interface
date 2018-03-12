@@ -1,4 +1,4 @@
-import argparse
+
 '''
 parser = argparse.ArgumentParser()
 parser.add_argument("name")
@@ -28,6 +28,7 @@ print(args.accumulate(args.integers))
 import argparse
 import datetime
 from calendar import monthrange
+import json
 
 import get_data
 import plotting
@@ -91,6 +92,3 @@ if year > 2013 or year < 1957:
 month = args.date.month
 date =  args.date.day
 '''
-
-
-
