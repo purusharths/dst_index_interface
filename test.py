@@ -1,30 +1,3 @@
-
-'''
-parser = argparse.ArgumentParser()
-parser.add_argument("name")
-parser.add_argument("Age")
-args = parser.parse_args()
-
-print(args.name)
-
-if args.name == 'magic.name':
-        print 'You nailed it!'
-
-
-import argparse
-
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('integers', metavar='N', type=int, nargs='+',
-                            help='an integer for the accumulator')
-parser.add_argument('--sum', dest='accumulate', action='store_const',
-                            const=sum, default=max,
-                                                help='sum the integers (default: find the max)')
-
-args = parser.parse_args()
-print(args)
-print(args.accumulate(args.integers))
-'''
-
 import argparse
 import datetime
 from calendar import monthrange
@@ -47,7 +20,7 @@ def get_day(year, month, day, rtr=False):
                 get_day(year, month, day)
 
 
-def cla(year, month, day, plot_day):
+def command_line_arguments(year, month, day, plot_day):
     if day!='None':
         limit = monthrange(int(year), int(month))[1]
         if int(day) > limit:
@@ -76,6 +49,8 @@ if __name__ == '__main__':
             return False
         else:
             raise argparse.ArgumentTypeError('Boolean value expected.')
+    
+    n = lambda x: ('0'+str(x)) if len(str(x)) == 1 else str(x)
 
     parser = argparse.ArgumentParser('My program')
     parser.add_argument('-y', '--year', type=int, choices=range(1957,2014))
@@ -83,21 +58,5 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--day', type=int, choices=range(1,32))
     parser.add_argument('--plot-day', type=str2bool, nargs='?', const=True)
     args = vars(parser.parse_args())
-    n = lambda x: ('0'+str(x)) if len(str(x)) == 1 else str(x)
-
-    cla(str(args['year']), n(args['month']), n(args['day']), args['plot_day'])
-
-'''
-import argparse
-import datetime
-
-parser = argparse.ArgumentParser()
-parser.add_argument('date', type=lambda s: datetime.datetime.strptime(s,'%Y-%m-%d'))
-args = parser.parse_args()  # For testing.  Pass no argument in production
-year = args.date.year
-if year > 2013 or year < 1957:
-    print("Invalid year argument! Year range is between 1957 to 2013. Try Again.")
-    exit()
-month = args.date.month
-date =  args.date.day
-'''
+    
+    command_line_arguments(str(args['year']), n(args['month']), n(args['day']), args['plot_day'])
