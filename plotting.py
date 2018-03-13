@@ -21,14 +21,16 @@ class Plotting(object):
 	def normal_plot(self, value, day=True):
 		plt.style.use('seaborn')
 		plt.plot(value,'o-')
-		plt.ylabel("Values")
+		#plt.grid(True)
 		if not day:
 			plt.xticks(range(0,len(value)))
-			plt.xlabel("Days")
+			plt.xlabel("Days of the month")
+			plt.ylabel("Average Value for each day")
 			title = self.get_formatted_date(year=self.year, month=self.month)
 			plt.title(title)
 			plt.show()
 		else:
+			plt.ylabel("Values")
 			plt.xticks(range(0,24))
 			plt.xlabel("Hours throughout the day")
 			title = self.get_formatted_date(year=self.year, month=self.month, day=self.day)

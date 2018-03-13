@@ -18,21 +18,14 @@ def get_day(year, month, day, rtr=False):
                 get_data.main(year,month,display=False)
                 get_day(year, month, day)
 
-def get_month(year, month, **kwargs): ## need to be optimised and merged with get_day
+def get_month(year, month): ## need to be optimised and merged with get_day
     response = get_data.get_value_from_database(year, month, print_result=False)
     if response:
-        if kwargs.get('get_raw_data', ''):
-            return response
         vals = []
         for val in response:
             temp = json.loads(val[1])
             vals.append(sum(temp)/len(temp))
-        return vals
-    else:
-        print("Downloading....")
-        get_data.main(year, month, display=False)
-        get_month(year, month)
-        
+    return vals
 
 
 def command_line_arguments(year, month, day, plot_day, plot_month):

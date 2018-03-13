@@ -5,16 +5,22 @@
   <title>Tables</title>
   <!-- <link rel="stylesheet" href="bootstrap.css"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    .form-control{
+      width: 250px;
+    }
+  </style>
 </head>
 <body>
+  <br/>
   <div class="container-fluid">
-  <h1>Hello</h1>
+  <h1>DST Index Interface</h1>
 
 
-  <form class="form-inline">
+  <form class="form">
     <div class="form-group">
       <label for="year">Year </label>
-      <input type="number" class="form-control" id="year" placeholder="Year" required name="year">
+      <input type="number" size='4' class="form-control" id="year" placeholder="Year" required name="year">
     </div>
     <div class="form-group">
       <label for="month">Month </label>
@@ -27,26 +33,18 @@
     </div>
 
     <div>
-      <br>
     <label class="radio-inline">
-      <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="plot"> Plot
+      <input type="radio" name="plotOptions" id="inlineRadio1" value="plot"> Plot
     </label>
     </div>
-    <br>
     <button type="submit" class="btn btn-default">Send </button>
+</form>
+<br/>
 
 
 
 
-  </form>
-
-
-
-
-
-
-
-  <table class="table table-bordered">
+<table class="table table-bordered">
 
     <tr>
       <th>day</th>
@@ -77,34 +75,17 @@
     </tr>
 
 
-    <tr>
-      <td>Sunday</td>
-      <td>9438</td>
-      <td>340</td>
-      <td>340</td>
-      <td>80000000</td>
-      <td>6</td>
-      <td>5</td>
-      <td>3</td>
-      <td>7</td>
-      <td>9</td>
-      <td>7</td>
-      <td>6</td>
-      <td>0</td>
-      <td>76</td>
-      <td>5</td>
-      <td>3</td>
-      <td>4</td>
-      <td>2</td>
-      <td>7</td>
-      <td>8</td>
-      <td>6</td>
-      <td>7</td>
-      <td>6</td>
-      <td>6</td>
-      <td>34</td>
-    </tr>
-  ...
+{% if month_contents is defined %}
+<tr>
+    {% for day,val in month_contents.items() %}
+        <td>{{day}}</td>
+        {%for v in val%}
+          <td>{{v}}</td>
+        {%endfor%} 
+</tr>
+    {% endfor%}
+{% endif %}
+
   </table>
 </div>
 </body>
