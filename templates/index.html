@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  
+  {% if date is defined %}
+    <title>DST Index Interface | {{date}}</title>
+  {% endif %}
   <title>DST Index Interface</title>
   <!-- <link rel="stylesheet" href="bootstrap.css"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -14,7 +19,7 @@
 <body>
   <br/>
   <div class="container-fluid">
-  <h1>DST Index Interface</h1>
+  <h1 class="text-center font-weight-bold" >DST Index Interface</h1>
 
 
   <form class="form">
