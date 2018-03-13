@@ -33,6 +33,13 @@ class Plotting(object):
 			plt.ylabel("Average Value for each day")
 			title = self.get_formatted_date(year=self.year, month=self.month)
 			plt.title(title)
+			if savefigure:
+				figfile = BytesIO()
+				plt.savefig(figfile, format='png')
+				plt.clf()
+				figfile.seek(0)
+				figdata_png = base64.b64encode(figfile.getvalue())
+				return figdata_png.decode('UTF-8')
 			plt.show()
 		else:
 			plt.ylabel("Values")
