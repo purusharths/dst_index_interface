@@ -1,8 +1,11 @@
 from flask import (Flask,render_template, request)
 import os
+from calendar import monthrange
+
 
 import main
 import ancillary
+import plotting
 
 app = Flask(__name__)
 
@@ -14,15 +17,33 @@ def index():
         if int(year) > 1957 and int(year) < 2014:# and int(month)>1 and int(month)<12:
             day = request.args.get('day','')
             plot_options = request.args.get('plotOptions', '')
-
+            # if day value is given
             if day:
-                pass
+                limit = monthrange(int(year), int(month))[1]
+                if int(day) > limit:
+                    return render_template("error.html", error_message=error_message)
+                contents = main.get_day(year, month, day, rtr=True)
+                if not contents:
+                    contents = main.get_day(year, month, day, rtr=True)
+                #getting date
+                pl = plotting.Plotting(year=year, month=month, day=day)
+                date = pl.get_formatted_date(year=year, month=month, day=day)
+                if plot_options:
+                    filename = date.replace(" ","_")+".png"
+                    filename = pl.normal_plot(contents, savefigure=True)
+                    return render_template('index.html', day_contents=contents, date=date, filename=filename)
+
+                return render_template('index.html', day_contents=contents, date=date)
+            # if day value is not given
             else:
                 contents = main.get_month(year, month, get_raw_data=True)
+                # getting date
+                pl = plotting.Plotting()
+                date = pl.get_formatted_date(year=year, month=month)
                 if not contents:
                     contents = main.get_month(year, month, get_raw_data=True)
                 contents = ancillary.convert_to_dict(string_list=contents)
-                return render_template('index.html', month_contents=contents)
+                return render_template('index.html', month_contents=contents, date=date)
             
         else:
             return render_template("error_year.html")

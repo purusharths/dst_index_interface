@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tables</title>
+  <title>DST Index Interface</title>
   <!-- <link rel="stylesheet" href="bootstrap.css"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <style>
@@ -42,10 +42,15 @@
 <br/>
 
 
+{% if date is defined %}
+<h2>{{date}}</h2><br/>
+{% endif %}
+{% if filename is defined %}
+    <img class="rounded mx-auto d-block" src="data:image/png;base64,{{filename}}" alt={{date}}/>
+{% endif %}
 
-
+{% if month_contents is defined %}
 <table class="table table-bordered">
-
     <tr>
       <th>day</th>
       <th>0000</th>
@@ -73,20 +78,59 @@
       <th>2200</th>
       <th>2300</th>
     </tr>
-
-
-{% if month_contents is defined %}
-<tr>
+  <tr>
     {% for day,val in month_contents.items() %}
         <td>{{day}}</td>
         {%for v in val%}
           <td>{{v}}</td>
         {%endfor%} 
-</tr>
+  </tr>
     {% endfor%}
+</table>
 {% endif %}
 
+{% if day_contents is defined %}
+  <table class="table table-bordered">
+    <tr>
+      <th>Day</th>
+      <th>0000</th>
+      <th>0100</th>
+      <th>0200</th>
+      <th>0300</th>
+      <th>0400</th>
+      <th>0500</th>
+      <th>0600</th>
+      <th>0700</th>
+      <th>0800</th>
+      <th>0900</th>
+      <th>1000</th>
+      <th>1100</th>
+      <th>1200</th>
+      <th>1300</th>
+      <th>1400</th>
+      <th>1500</th>
+      <th>1600</th>
+      <th>1700</th>
+      <th>1800</th>
+      <th>1900</th>
+      <th>2000</th>
+      <th>2100</th>
+      <th>2200</th>
+      <th>2300</th>
+    </tr>
+
+  <tr>
+    <td></td>
+
+    {% for content in day_contents %}
+          <td>{{content}}</td>
+    {%endfor%} 
+  </tr>
+
   </table>
+{% endif %}
+{{filepath}}
+
 </div>
 </body>
 </html>

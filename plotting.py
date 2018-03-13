@@ -1,4 +1,9 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+
 from datetime import datetime
 class Plotting(object):
 	"""docstring for Plotting"""
@@ -16,9 +21,9 @@ class Plotting(object):
 			return dt_obj.strftime("%B %d, %Y (%A)")
 		else:
 			dt_obj = datetime.strptime("{}/{}".format(year, month), "%Y/%M")
-			return dt_obj.strftime("%B - %Y")
+			return dt_obj.strftime("%B (%Y)")
 
-	def normal_plot(self, value, day=True):
+	def normal_plot(self, value, day=True, savefigure=False, **kwargs):
 		plt.style.use('seaborn')
 		plt.plot(value,'o-')
 		#plt.grid(True)
@@ -35,4 +40,11 @@ class Plotting(object):
 			plt.xlabel("Hours throughout the day")
 			title = self.get_formatted_date(year=self.year, month=self.month, day=self.day)
 			plt.title(title)
+			if savefigure:
+				figfile = BytesIO()
+				plt.savefig(figfile, format='png')
+				plt.clf()
+				figfile.seek(0)
+				figdata_png = base64.b64encode(figfile.getvalue())
+				return figdata_png.decode('UTF-8')
 			plt.show()
