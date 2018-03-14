@@ -10,7 +10,21 @@ There is also a `.sqlite` database which keeps a cashed copy of all the indices 
 ## Usage
 For either of the interface, switch to the branch and do <br/>
 `pip install -r requirements.txt`
-### Command Line Interface
-`python main.py --year <year> --month <month> --day <day>`
+### 1. Command Line Interface
+*To get readings for a month* <br/>
+`python main.py --year <year> --month <month>` <br/>
+or  <br/>
+`python main.py -y <year> -m <month>`<br/>
+*To get result for a specific day* <br/>
+`python main.py --year <year> --month <month> --day <day>` <br/>
+or <br/>
+`python main.py -y <year> -m <month> -d <day>`<br/>
+#### Plot Options (CLI)
+The flag `--plot-days` and `--plot-month` are used for getting matplotlib graphs for the given day / month (average value for each day of the month). <br/>
+Example: <br/>
+`python main.py --year 1969 --month  12 --day 12 --plot-days`
 
-### 
+### 2. Web Application
+This web application is based on Flask Microframework. Make sure that flask is installed and run: <br/>
+`python app.py` <br/>
+The live version is up on heroku can be accessed <a href="https://dstindex.herokuapp.com"> here </a>.
